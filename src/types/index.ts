@@ -12,14 +12,11 @@ export type Payment = 'cash' | 'card' | '';
 export interface IOrderForm {
 	payment: Payment;
 	address: string;
-}
-
-export interface IOrderContactsForm extends IOrderForm{
-	email: string;
 	phone: string;
+	email: string;
 }
 
-export interface IOrder extends IOrderContactsForm {
+export interface IOrder extends IOrderForm {
 	items: string[];
 }
 
@@ -31,9 +28,9 @@ export interface IOrderResult {
 export type FormErrors = Partial<Record<keyof IOrder, string>>;
 
 export interface IAppState {
-  catalog: IProduct[];
-  basket: string[];
-  preview: string | null;
-  order: IOrder | null;
-  loading: boolean;
+	catalog: IProduct[];
+	basket: string[];
+	preview: string | null;
+	order: IOrder | null;
+	loading: boolean;
 }

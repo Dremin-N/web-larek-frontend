@@ -16,7 +16,6 @@ export type CatalogChangeEvent = {
 export class AppState extends Model<IAppState> {
 	basket: string[];
 	catalog: IProduct[];
-	loading: boolean;
 	order: IOrder = {
 		payment: '',
 		address: '',

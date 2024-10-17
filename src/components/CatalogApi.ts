@@ -17,16 +17,16 @@ export class AuctionAPI extends Api implements ICatalogAPI {
 
     // Получаем список товаров
     getproductList(): Promise<IProduct[]> {
-
+        return
     }
 
     // Получаем товар
     getProductItem(id: string): Promise<IProduct> {
-
+        return
     }
 
     // Отправляем заказ
     orderProducts(order: IOrder): Promise<IOrderResult> {
-
+        return
     }
 }
