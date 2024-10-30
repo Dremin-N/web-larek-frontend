@@ -2,31 +2,39 @@ import { Api, ApiListResponse } from './base/api';
 import { IProduct, IOrder, IOrderResult } from '../types';
 
 export interface ICatalogAPI {
-    getproductList: () => Promise<IProduct[]>;
-    getProductItem: (id: string) => Promise<IProduct>;
-    orderProducts: (order: IOrder) => Promise<IOrderResult>;
+	getproductList: () => Promise<IProduct[]>;
+	getProductItem: (id: string) => Promise<IProduct>;
+	orderProducts: (order: IOrder) => Promise<IOrderResult>;
 }
 
-export class AuctionAPI extends Api implements ICatalogAPI {
-    readonly cdn: string;
+export class CatalogAPI extends Api implements ICatalogAPI {
+	readonly cdn: string;
 
-    constructor(cdn: string, baseUrl: string, options?: RequestInit) {
-        super(baseUrl, options);
-        this.cdn = cdn;
-    }
+	constructor(cdn: string, baseUrl: string, options?: RequestInit) {
+		super(baseUrl, options);
+		this.cdn = cdn;
+	}
 
-    // Получаем список товаров
-    getproductList(): Promise<IProduct[]> {
-        return
-    }
+	// Получаем список товаров
+	getproductList(): Promise<IProduct[]> {
+		return this.get('/product').then((data: ApiListResponse<IProduct>) =>
+			data.items.map((item) => ({
+				...item,
+				image: this.cdn + item.image,
+			}))
+		);
+	}
 
-    // Получаем товар
-    getProductItem(id: string): Promise<IProduct> {
-        return
-    }
+	// Получаем товар
+	getProductItem(id: string): Promise<IProduct> {
+		return this.get(`/product/${id}`).then((item: IProduct) => ({
+			...item,
+			image: this.cdn + item.image,
+		}));
+	}
 
-    // Отправляем заказ
-    orderProducts(order: IOrder): Promise<IOrderResult> {
-        return
-    }
+	// Отправляем заказ
+	orderProducts(order: IOrder): Promise<IOrderResult> {
+		return this.post('/order', order).then((data: IOrderResult) => data);
+	}
 }
