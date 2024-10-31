@@ -25,8 +25,6 @@ export class Basket extends Component<IBasketView> {
 				events.emit('order:open');
 			});
 		}
-
-		this.items = [];
 	}
 
 	// Задаем список товаров в корзине

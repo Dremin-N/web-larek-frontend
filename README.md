@@ -12,8 +12,10 @@
 
 - src/pages/index.html — HTML-файл главной страницы
 - src/types/index.ts — файл с типами
+- src/appData.ts - файл с моделью данных приложения
+- src/CatalogApi.ts - файл для взаимодействия с api приложения
 - src/index.ts — точка входа приложения
-- src/styles/styles.scss — корневой файл стилей
+- src/scss/styles.scss — корневой файл стилей
 - src/utils/constants.ts — файл с константами
 - src/utils/utils.ts — файл с утилитами
 

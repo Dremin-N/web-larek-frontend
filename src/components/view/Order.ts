@@ -1,7 +1,7 @@
-import { Form } from './common/Form';
-import { IOrderContacts, IOrderForm } from '../types';
-import { EventEmitter, IEvents } from './base/events';
-import { ensureElement } from '../utils/utils';
+import { Form } from './Form';
+import { IOrderContacts, IOrderForm } from '../../types';
+import { EventEmitter, IEvents } from '../base/events';
+import { ensureElement } from '../../utils/utils';
 
 export class Order extends Form<IOrderForm> {
 	protected _tabs: HTMLButtonElement[];

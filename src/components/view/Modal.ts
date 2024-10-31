@@ -1,5 +1,5 @@
 import { Component } from '../base/Component';
-import { ensureElement } from '../../utils/utils';
+import { createElement, ensureElement } from '../../utils/utils';
 import { IEvents } from '../base/events';
 
 interface IModalData {
@@ -38,6 +38,12 @@ export class Modal extends Component<IModalData> {
 		this.container.classList.remove('modal_active');
 		this.content = null;
 		this.events.emit('modal:close');
+	}
+
+	createLoader(): HTMLSpanElement {
+		const preloader = document.createElement('span');
+		preloader.classList.add('loader');
+		return preloader;
 	}
 
 	render(data: IModalData) {

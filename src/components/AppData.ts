@@ -8,24 +8,12 @@ import {
 	IOrderResult,
 	IOrderInputs,
 } from '../types';
-import { CardCatalog } from './common/Card';
-
-export type CatalogChangeEvent = {
-	catalog: IProduct[];
-};
-
-export class CatalogItem extends Model<IProduct> {
-	category: string;
-	description: string;
-	id: string;
-	image: string;
-	title: string;
-	price: number;
-}
+import { CardCatalog } from './view/Card';
 
 export class AppState extends Model<IAppState> {
 	noPriceItems: string[];
 	catalog: IProduct[];
+	basket: HTMLElement[] = [];
 	order: IOrder = {
 		payment: '',
 		address: '',
@@ -66,8 +54,8 @@ export class AppState extends Model<IAppState> {
 		);
 	}
 
-	// получает общую сумму заказа
-	getTotal() {
+	// Обновляет общую сумму заказа
+	setTotal() {
 		this.order.total = this.order.items.reduce(
 			(a, c) => a + this.catalog.find((it) => it.id === c).price,
 			0
@@ -76,7 +64,7 @@ export class AppState extends Model<IAppState> {
 
 	// Устанавливает список товаров для каталога
 	setCatalog(items: IProduct[]) {
-		this.catalog = items.map((item) => new CatalogItem(item, this.events));
+		this.catalog = items;
 		this.emitChanges('items:changed', { catalog: this.catalog });
 	}
 

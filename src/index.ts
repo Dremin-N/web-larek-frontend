@@ -3,11 +3,11 @@ import './scss/styles.scss';
 import { EventEmitter } from './components/base/events';
 import { CatalogAPI } from './components/CatalogApi';
 import { API_URL, CDN_URL } from './utils/constants';
-import { CardCatalog, CardPreview, CardBasket } from './components/common/Card';
-import { Page } from './components/Page';
-import { AppState, CatalogItem } from './components/AppData';
+import { CardCatalog, CardPreview, CardBasket } from './components/view/Card';
+import { Page } from './components/view/Page';
+import { AppState } from './components/AppData';
 import { cloneTemplate, ensureElement } from './utils/utils';
-import { Modal } from './components/common/Modal';
+import { Modal } from './components/view/Modal';
 import {
 	IOrder,
 	IOrderContacts,
@@ -15,9 +15,9 @@ import {
 	IOrderInputs,
 	IProduct,
 } from './types';
-import { Basket } from './components/common/Basket';
-import { Contacts, Order } from './components/Order';
-import { Success } from './components/common/Success';
+import { Basket } from './components/view/Basket';
+import { Contacts, Order } from './components/view/Order';
+import { Success } from './components/view/Success';
 
 const events = new EventEmitter();
 const api = new CatalogAPI(CDN_URL, API_URL);
@@ -88,6 +88,10 @@ events.on('preview:changed', (item: IProduct) => {
 	};
 
 	if (item) {
+		modal.render({
+			content: modal.createLoader(),
+		});
+
 		api
 			.getProductItem(item.id)
 			.then(() => {
@@ -104,17 +108,15 @@ events.on('preview:changed', (item: IProduct) => {
 // Изменения в корзине
 events.on('order:changed', (item: IProduct) => {
 	appData.toggleOrderedItem(item.id);
-	appData.getTotal();
-	page.counter = appData.order.items.length;
-});
-
-// Открытие корзины
-events.on('basket:open', () => {
-	const cards = appData.getOrderedItems().map((item, index) => {
+	appData.basket = appData.getOrderedItems().map((item, index) => {
 		const card = new CardBasket(cloneTemplate(cardBasketTemplate), {
 			onClick: () => {
 				events.emit('order:changed', item);
-				events.emit('basket:open');
+				/* Не совсем понимаю как тут избавиться от события basket:open,
+   ведь как-то же нужно перерендерить корзину после удаления id товара из массива заказа
+   Можно конечно создать дополнительное событие, которое будет удалять
+   элемент прям из DOM, но мне кажется это не лучшее решение */
+				events.emit('basket:open', item);
 			},
 		});
 
@@ -124,11 +126,18 @@ events.on('basket:open', () => {
 			price: item.price,
 		});
 	});
+
+	appData.setTotal();
+	page.counter = appData.order.items.length;
+});
+
+// Открытие корзины
+events.on('basket:open', () => {
 	modal.render({
 		content: basket.render({
 			total: appData.order.total,
 			selected: appData.order.total,
-			items: cards,
+			items: appData.basket,
 		}),
 	});
 });
